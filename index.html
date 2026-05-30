@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>R.I.C.O.</title>
+    <!-- <link rel='stylesheet' href='main.css'> -->
+</head>
+<body>
+    <div>cash: <span id="cash"></span></div>
+    <div>bank: <span id="bank"></span></div>
+    <div>debt: <span id="debt"></span></div>
+
+    <h3>Available Drugs</h3>
+    <div id="available-drugs"></div>
+
+    <script>
+        const toMilliBtc = (btc) => {
+            return (btc * 1000).toLocaleString();
+        }
+    </script>
+
+    <script>
+    fetch('https://api.coingecko.com/api/v3/coins/bitcoin')
+        .then(response => response.json())
+        .then((json) => {
+            const btcPrice = json.market_data.current_price.gbp;
+            document.getElementById('cash').innerHTML = toMilliBtc(2000 / btcPrice);
+            document.getElementById('bank').innerHTML = toMilliBtc(0 / btcPrice);
+            document.getElementById('debt').innerHTML = toMilliBtc(5500 / btcPrice);
+
+            const availableDrugsArr = [
+                {name: "Acid", price: toMilliBtc(1714 / btcPrice)},
+                {name: "Ecstasy", price: toMilliBtc(898 / btcPrice)},
+                {name: "Hashish", price: toMilliBtc(1372 / btcPrice)},
+                {name: "Opium", price: toMilliBtc(3208 / btcPrice)},
+                {name: "Peyote", price: toMilliBtc(522 / btcPrice)},
+                {name: "Shrooms", price: toMilliBtc(1333 / btcPrice)},
+                {name: "Smack", price: toMilliBtc(5771 / btcPrice)},
+                {name: "Speed", price: toMilliBtc(113 / btcPrice)},
+                {name: "Weed", price: toMilliBtc(730 / btcPrice)},
+            ];
+
+            availableDrugsArr.sort((a, b) => a.price - b.price);
+
+            let availableDrugsTag = ``;
+            availableDrugsArr.forEach((drug) => {
+                availableDrugsTag += `<div>${drug.name}: ${drug.price}</div>`
+            });
+
+            document.getElementById('available-drugs').innerHTML = availableDrugsTag;
+
+            // TODO: initialize cities using yak's rng.
+        })
+</script>
+</body>
+</html>
