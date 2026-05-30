@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-main>
+                <v-row>
+                    <v-col>
+                        <v-row class="green--text">
+                            <v-col>cash</v-col>
+                            <v-col class="text-right">{{toMillBtc(cash)}}</v-col>
+                        </v-row>
+                        <v-row class="green--text">
+                            <v-col>bank</v-col>
+                            <v-col class="text-right">{{toMillBtc(bank)}}</v-col>
+                        </v-row>
+                        <v-row class="red--text">
+                            <v-col>debt</v-col>
+                            <v-col class="text-right">{{toMillBtc(debt)}}</v-col>
+                        </v-row>
+                    </v-col>
+                    <v-col></v-col>
+                </v-row>
+                <!--  -->
+                <v-row>
+                    <v-col class="text-center">
+                        <span>health</span>
+                        <v-progress-linear value="61"></v-progress-linear>
+                        <v-btn width="100%">Finances</v-btn>
+                        <v-btn width="100%">Buy</v-btn>
+                        <v-btn width="100%">Sell</v-btn>
+                    </v-col>
+                    <v-col>
+                        <!-- <v-row>
+                            <v-col><v-btn width="100%">Finances</v-btn></v-col>
+                            <v-col><v-btn width="100%">Buy</v-btn></v-col>
+                            <v-col><v-btn width="100%">Sell</v-btn></v-col>
+                        </v-row> -->
+                    </v-col>
+                </v-row>
+                <!--  -->
+                <v-row>
+                    <v-col>
+                        <v-simple-table>
+                            <template v-slot:default>
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">
+                                            drug
+                                        </th>
+                                        <th class="text-right">
+                                            price
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="item in availableDrugs" :key="item.name">
+                                        <td class="text-left">{{ item.name }}</td>
+                                        <td class="text-right">{{ toMillBtc(item.price) }}</td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </v-col>
+                    <v-col></v-col>
+                </v-row>
+            </v-main>
+        </v-app>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            vuetify: new Vuetify(),
+            data: function () {
+                return {
+                    btcPrice: 0,
+                    cash: 0,
+                    bank: 0,
+                    debt: 0,
+                    availableDrugs: [],
+                };
+            },
+            mounted() {
+                this.fetchBtcPrice();
+            },
+
+            methods: {
+                async fetchBtcPrice() {
+                    try {
+                        const response = await axios.get(
+                            'https://api.coingecko.com/api/v3/coins/bitcoin'
+                        );
+
+                        const btcPrice = (response.data.market_data.current_price.gbp);
+                        this.btcPrice = btcPrice;
+                        this.cash = 2000 / btcPrice;
+                        this.bank = 0 / btcPrice;
+                        this.debt = 5500 / btcPrice;
+
+                        const availableDrugs = [
+                            { name: "acid", price: 1714 / btcPrice },
+                            { name: "ecstasy", price: 898 / btcPrice },
+                            { name: "hashish", price: 1372 / btcPrice },
+                            { name: "opium", price: 3208 / btcPrice },
+                            { name: "peyote", price: 522 / btcPrice },
+                            { name: "shrooms", price: 1333 / btcPrice },
+                            { name: "smack", price: 5771 / btcPrice },
+                            { name: "speed", price: 113 / btcPrice },
+                            { name: "weed", price: 730 / btcPrice },
+                        ];
+
+                        availableDrugs.sort((a, b) => a.price - b.price);
+                        this.availableDrugs = availableDrugs;
+                    } catch (err) {
+                        this.error = err.message;
+                    } finally {
+                        console.log('init');
+                    }
+                },
+                toMillBtc(btc) {
+                    return (btc * 1000).toLocaleString();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
