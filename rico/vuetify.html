@@ -32,18 +32,13 @@
                 <!--  -->
                 <v-row>
                     <v-col class="text-center">
-                        <span>health</span>
+                        <span>HEALTH</span>
                         <v-progress-linear value="61"></v-progress-linear>
                         <v-btn width="100%">Finances</v-btn>
-                        <v-btn width="100%">Buy</v-btn>
-                        <v-btn width="100%">Sell</v-btn>
+                        <v-btn disabled width="100%">Buy</v-btn>
+                        <v-btn disabled width="100%">Sell</v-btn>
                     </v-col>
                     <v-col>
-                        <!-- <v-row>
-                            <v-col><v-btn width="100%">Finances</v-btn></v-col>
-                            <v-col><v-btn width="100%">Buy</v-btn></v-col>
-                            <v-col><v-btn width="100%">Sell</v-btn></v-col>
-                        </v-row> -->
                     </v-col>
                 </v-row>
                 <!--  -->
@@ -83,7 +78,7 @@
     <script>
         new Vue({
             el: '#app',
-            vuetify: new Vuetify(),
+            vuetify: new Vuetify({theme: {dark: true}}),
             data: function () {
                 return {
                     btcPrice: 0,
